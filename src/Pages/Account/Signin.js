@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Form, Input, Button, Card, Row, Col, Typography } from 'antd';
 import globalUser from '../../GlobalVariable';
 
+
 const { Text, Link } = Typography;
 
 
@@ -10,26 +11,26 @@ class Signin extends Component {
 
     constructor(props) {
         super(props);
-        
+
         this.state = {
-          hasError: false,
-          current: 0
+            hasError: false,
+            current: 0
         };
-      }
+    }
 
     onHandleSubmit = async (values) => {
         console.log(values);
         var contract = {
-            mailAddress:values.mail,
+            mailAddress: values.mail,
             password: values.password
         }
-        await fetch("https://localhost:7193/api/account/login", {
+        await fetch("https://localhost:5001/api/account/login", {
             "method": "POST",
             "headers": new Headers({
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             }),
-            "body":JSON.stringify(contract)
+            "body": JSON.stringify(contract)
         })
             .then(res => res.json())
             .then(
@@ -39,9 +40,7 @@ class Signin extends Component {
                         isLoaded: true,
                         items: result
                     });
-                    globalUser.id = result?.id;
-                    Object.freeze(globalUser);
-                    
+                    this.props.setCookie('userId', result.id, { path: '/' });
                 },
                 (error) => {
                     this.setState({
@@ -50,14 +49,14 @@ class Signin extends Component {
                     });
                 }
             )
-            this.props.navigate("/registercomplete");
+        this.props.navigate("/registercomplete");
     }
 
     render() {
         console.log(globalUser);
         return (
             <Row>
-                <Col span={6} style={{ margin: "auto" }}>
+                <Col span={8} style={{ margin: "auto" }}>
                     <Card style={{ marginTop: 300, boxShadow: "rgba(17, 12, 46, 0.15) 0px 48px 100px 0px" }}>
                         <Form
                             name="basic"
@@ -68,7 +67,7 @@ class Signin extends Component {
                             onFinish={this.onHandleSubmit}
                         >
                             <Form.Item
-                                label="Mail"
+                                label="Email"
                                 name="mail"
                                 rules={[{ required: true, message: 'Please input your mail address!' }]}
                             >

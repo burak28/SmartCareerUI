@@ -48,7 +48,7 @@ class Main extends Component {
       var contract = {
         description: this.state.profileDescription
       }
-      await fetch("http://localhost:5000/resumeparser", {
+      await fetch("http://localhost:4888/resumeparser", {
         "method": "POST",
         "headers": new Headers({
           'Accept': 'application/json',
@@ -83,12 +83,12 @@ class Main extends Component {
         phoneNumber: this.state.items?.phone,
         skills: this.state.items?.skills
       }
-      await fetch("https://localhost:7193/api/account/completeregister", {
+      await fetch("https://localhost:5001/api/account/completeregister", {
         "method": "POST",
         "headers": new Headers({
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          "userId": globalUser?.id
+          "userId": this.props.cookies.userId
         }),
         "body": JSON.stringify(contract)
       })
@@ -108,6 +108,7 @@ class Main extends Component {
           }
         )
       setTimeout(hide, 0);
+      this.props.navigate("/main");
   }
 
   prev = () => {
@@ -193,7 +194,7 @@ class Main extends Component {
           <Descriptions.Item label="Username" span={3}>{this.state.items?.personname}</Descriptions.Item>
           <Descriptions.Item label="Email" span={3}>{this.state.items?.email}</Descriptions.Item>
           <Descriptions.Item label="Phone Number" span={3}>{this.state.items?.phone}</Descriptions.Item>
-          <Descriptions.Item label="Skills" span={3}>{this.state.items?.skills?.map(item => { return (item + " - ") })}</Descriptions.Item>
+          <Descriptions.Item label="Skills" span={3}>{this.state.items?.skills?.join(' - ') }</Descriptions.Item>
         </Descriptions>,
       },
     ];
@@ -210,7 +211,7 @@ class Main extends Component {
             bottom: 0,
           }}
         >
-          <div className="logo" />
+          <div className="logo" style={{ height: 64, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "x-large" }}>SmartCareer</div>
         </Sider>
         <Layout className="site-layout" style={{ marginLeft: 200 }}>
           <Header className="site-layout-background" style={{ padding: 0 }} />

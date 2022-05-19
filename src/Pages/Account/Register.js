@@ -1,45 +1,48 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Card, Row, Col, Typography } from 'antd';
+import { Form, Input, Button, Card, Row, Col, Typography, message } from 'antd';
 
-const { Text, Link } = Typography;
+const { Link } = Typography;
 
 class Register extends Component {
 
     onHandleSubmit = (values) => {
-        console.log(values);
-        var contract = {
-            mailAddress:values.mail,
-            password: values.password
+        if (values.password != values.verifyPassword) {
+            message.warning('These two passwords are not equal.');
+        } else {
+            var contract = {
+                mailAddress: values.mail,
+                password: values.password
+            }
+            fetch("https://localhost:5001/api/account/register", {
+                "method": "POST",
+                "headers": new Headers({
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }),
+                "body": JSON.stringify(contract)
+            })
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        this.setState({
+                            isLoaded: true,
+                            items: result.items
+                        });
+                    },
+                    (error) => {
+                        this.setState({
+                            isLoaded: true,
+                            error
+                        });
+                    }
+                )
         }
-        fetch("https://localhost:7193/api/account/register", {
-            "method": "POST",
-            "headers": new Headers({
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }),
-            "body":JSON.stringify(contract)
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded: true,
-                        items: result.items
-                    });
-                },
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
     }
 
     render() {
         return (
             <Row>
-                <Col span={6} style={{ margin: "auto" }}>
+                <Col span={8} style={{ margin: "auto" }}>
                     <Card style={{ marginTop: 300, boxShadow: "rgba(17, 12, 46, 0.15) 0px 48px 100px 0px" }}>
                         <Form
                             name="basic"
@@ -50,7 +53,7 @@ class Register extends Component {
                             onFinish={this.onHandleSubmit}
                         >
                             <Form.Item
-                                label="Mail"
+                                label="Email"
                                 name="mail"
                                 rules={[{ required: true, message: 'Please input your mail address!' }]}
                             >
@@ -66,9 +69,9 @@ class Register extends Component {
                             </Form.Item>
 
                             <Form.Item
-                                label="Password"
-                                name="password"
-                                rules={[{ required: true, message: 'Please input your password!' }]}
+                                label="Verify Password"
+                                name="verifyPassword"
+                                rules={[{ required: true, message: 'Please verify your password!' }]}
                             >
                                 <Input.Password />
                             </Form.Item>
