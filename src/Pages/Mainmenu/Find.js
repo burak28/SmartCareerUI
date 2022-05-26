@@ -79,6 +79,12 @@ class Find extends Component {
                             <div style={{ marginTop: 16 }} >
                                 <Text>{item.skillSet.join(" - ")}</Text>
                             </div>
+                            <div style={{ marginTop: 16 }} >
+                                <Text>{item.userName}</Text>
+                            </div>
+                            <div style={{ marginTop: 16 }} >
+                                <Text>{item.userEmail}</Text>
+                            </div>
                         </Card>
                     </Col>)}
                 </Row>
